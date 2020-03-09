@@ -1,2 +1,0 @@
-Input: <Row Number, n-gram    year    occurrences ...>
-Output: <<w1,w2,w3>, TotalOccurrences>

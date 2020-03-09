@@ -19,7 +19,6 @@ import java.io.IOException;
 
 public class OneGramCounter {
     public static class Map extends Mapper<LongWritable, Text, Text, LongWritable> {
-        private LongWritable one = new LongWritable(1);
 
         /**
          * Input: 1-gram dataset.
@@ -32,6 +31,7 @@ public class OneGramCounter {
          */
         @Override
         protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            LongWritable one = new LongWritable(1);
             String[] record = value.toString().split(DatasetFormat.DELIMITER);
             if (!Utils.preProcessing(record[DatasetFormat.N_GRAM].split(DatasetFormat.NGRAM_DELIMITER)))
                 return;
@@ -51,13 +51,13 @@ public class OneGramCounter {
     }
 
     public static class Reduce extends Reducer<Text, LongWritable, Text, LongWritable> {
-        private LongWritable outValue = new LongWritable(0);
 
         // <w, occ>
 
         @Override
         protected void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
             long sum = 0;
+            LongWritable outValue = new LongWritable(0);
             for (LongWritable value :
                     values) {
                 sum += value.get();
@@ -90,7 +90,10 @@ public class OneGramCounter {
         // Output K&V Classes :
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
-
+        //Combiner
+        job.setCombinerClass(Reduce.class);
+        //misc
+        job.setNumReduceTasks(1);
 
         boolean success = job.waitForCompletion(true);
         System.out.println(success);

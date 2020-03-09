@@ -1,5 +1,6 @@
 package counting_2gram;
 
+import counting_1gram.OneGramCounter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
@@ -48,11 +49,11 @@ public class TwoGramCounter {
     }
 
     public static class Reduce extends Reducer<Text, LongWritable, Text, LongWritable> {
-        private LongWritable outValue = new LongWritable(0);
 
         @Override
         protected void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException, InterruptedException {
             long sum = 0;
+            LongWritable outValue = new LongWritable(0);
             for (LongWritable value :
                     values) {
                 sum += value.get();
@@ -83,6 +84,10 @@ public class TwoGramCounter {
         // Output K&V Classes :
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
+        //combiner
+        job.setCombinerClass(OneGramCounter.Reduce.class);
+        //misc
+        job.setNumReduceTasks(1);
 
 
         boolean success = job.waitForCompletion(true);

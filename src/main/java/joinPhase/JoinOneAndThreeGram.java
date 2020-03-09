@@ -16,6 +16,8 @@ import utils.DatasetFormat;
 import utils.Utils;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JoinOneAndThreeGram {
     public final static String oneGramIdentifier = "1gram";
@@ -59,11 +61,10 @@ public class JoinOneAndThreeGram {
 
     public static class ReducerSideJoin extends Reducer<Text, Text, Text, Text> {
         /**
-         *
-         * @param key c0Key or w
-         * @param values has numerous formats:
-         *               1. key = c0Key => value = <OneGramIdentifier + actual value> or <ThreeGramIdentifier + 3gram + C0IDENTIFIER>
-         *               2. key = w =>     value = <OneGramIdentifier + actual value> or <ThreeGramIdentifier + 3gram + C1IDENTIFIER/N1IDENTIFIER>
+         * @param key     c0Key or w
+         * @param values  has numerous formats:
+         *                1. key = c0Key => value = <OneGramIdentifier + actual value> or <ThreeGramIdentifier + 3gram + C0IDENTIFIER>
+         *                2. key = w =>     value = <OneGramIdentifier + actual value> or <ThreeGramIdentifier + 3gram + C1IDENTIFIER/N1IDENTIFIER>
          * @param context
          * @throws IOException
          * @throws InterruptedException
@@ -108,6 +109,7 @@ public class JoinOneAndThreeGram {
 
         /**
          * Output : <w1 w2 w3,identifier actualValue>
+         *
          * @param key
          * @param identifier
          * @param actualValue
@@ -127,11 +129,12 @@ public class JoinOneAndThreeGram {
         job.setJarByClass(JoinOneAndThreeGram.class);
         job.setPartitionerClass(PartitionerClass.class);
         // input format class :
-        MultipleInputs.addInputPath(job, new Path(args[0]),TextInputFormat.class, OneGramMapper.class);
-        MultipleInputs.addInputPath(job, new Path(args[1]),TextInputFormat.class, ThreeGramMapper.class);
+        MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, JoinOneAndThreeGram.OneGramMapper.class);
+        MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, JoinOneAndThreeGram.ThreeGramMapper.class);
         // output format class :
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path(args[2]));
+        Path outputPath = new Path(args[2]);
+        FileOutputFormat.setOutputPath(job,outputPath);
         // Mapper & Reducer Classes :
         job.setReducerClass(ReducerSideJoin.class);
         // Mapper Output Classes :
@@ -141,11 +144,11 @@ public class JoinOneAndThreeGram {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
+        job.setNumReduceTasks(1);
 
         boolean success = job.waitForCompletion(true);
         System.out.println(success);
 
-        //outputPath.getFileSystem(conf).delete(outputPath);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
     }

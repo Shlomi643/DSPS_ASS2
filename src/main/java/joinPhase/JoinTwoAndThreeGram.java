@@ -15,6 +15,8 @@ import utils.DatasetFormat;
 import utils.Utils;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JoinTwoAndThreeGram {
     public final static String twoGramIdentifier = "2gram";
@@ -124,12 +126,13 @@ public class JoinTwoAndThreeGram {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 
-        MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, TwoGramMapper.class);
+        job.setNumReduceTasks(1);
+
+        MultipleInputs.addInputPath(job, new Path(args[0]), TextInputFormat.class, JoinTwoAndThreeGram.TwoGramMapper.class);
         MultipleInputs.addInputPath(job, new Path(args[1]), TextInputFormat.class, JoinTwoAndThreeGram.ThreeGramMapper.class);
         Path outputPath = new Path(args[2]);
 
         FileOutputFormat.setOutputPath(job, outputPath);
-        outputPath.getFileSystem(conf).delete(outputPath);
         System.exit(job.waitForCompletion(true) ? 0 : 1);
 
     }

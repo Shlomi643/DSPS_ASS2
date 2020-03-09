@@ -89,7 +89,6 @@ public class Main {
                 .withActionOnFailure(TERM_JFLOW);
 
 
-
         JobFlowInstancesConfig instances = new JobFlowInstancesConfig()
                 .withInstanceCount(NUM_OF_INSTANCES)
                 .withMasterInstanceType(INSTANCE_TYPE)
@@ -102,7 +101,7 @@ public class Main {
         RunJobFlowRequest runFlowRequest = new RunJobFlowRequest()
                 .withName(APP_NAME)
                 .withInstances(instances)
-                .withSteps(step1, step2, step3, step4, step5, step6)
+                .withSteps(step4, step5, step6, step7)
                 .withJobFlowRole(EMR_EC2_ROLE)
                 .withServiceRole(EMR_ROLE)
                 .withReleaseLabel(EMR_RELEASE_LABEL)

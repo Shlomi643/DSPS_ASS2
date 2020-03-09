@@ -45,12 +45,12 @@ public class Utils {
     public static final String ONE_THREE_JOIN_NAME = "JoinOneAndThreeGram";
     public static final String[] ONE_THREE_JOIN_INPUTS = {ONE_GRAM_OUT_URL, THREE_GRAM_OUT_URL};
     public static final String ONE_THREE_JOIN_OUTPUT = OUTPUT_URL + "FourthStepOut";
-    public static final String ONE_THREE_JOIN_JAR = BUCKET_URL + "jars/JoinOneAndThreeGram.jar"; //
+    public static final String ONE_THREE_JOIN_JAR = BUCKET_URL + "jars/JoinOneAndThreeGram.jar";
 
     public static final String TWO_THREE_JOIN_NAME = "JoinTwoAndThreeGram";
     public static final String[] TWO_THREE_JOIN_INPUTS = {TWO_GRAM_OUT_URL, THREE_GRAM_OUT_URL};
     public static final String TWO_THREE_JOIN_OUTPUT = OUTPUT_URL + "FifthStepOut";
-    public static final String TWO_THREE_JOIN_JAR = BUCKET_URL + "jars/JoinTwoAndThreeGram.jar"; //
+    public static final String TWO_THREE_JOIN_JAR = BUCKET_URL + "jars/JoinTwoAndThreeGram.jar";
 
     public static final String CALCULATE_PROB_NAME = "CalculateProbFormula";
     public static final String[] CALCULATE_PROB_INPUTS = {TWO_THREE_JOIN_OUTPUT, ONE_THREE_JOIN_OUTPUT, THREE_GRAM_OUT_URL};
